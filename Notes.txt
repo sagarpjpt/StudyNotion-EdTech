@@ -1,0 +1,343 @@
+----BACKEND-CLASS-01---------
+
+1--> npm i otp-generator package for generating otp's
+
+2--> create all 9 models
+
+3--> use .pre() middleware in otp model(after schema and before model exports) to send otp before saving otp doc to db
+
+4--> create a mail sender inside file in ./utils/
+
+5--> create Auth and ResetPassword controller in ./controllers
+
+----BACKEND-CLASS-02---------
+
+1--> write Auth.js logic/fn's
+
+2--> use dicebear.com api to create image url for profile pic it creates profile pic by first letter of fname and lname alphabet
+    https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}
+
+3--> write auth.js middleware in ./middlewares/
+
+4--> write fn for ResetPassword logic
+
+5--> add two more field in User Model token and resetpasswordExpires
+
+6--> genrate random string(ie token) used for ResetPassword
+using crypto.randomUUID()
+
+----BACKEND-CLASS-03---------
+
+1--> only admin can decide tags in web app and before adding course(by instructor) tags must be defined
+
+2--> create Tags.js controller - getAllTags, createTag
+
+3--> create Course.js controller - createCourse, getAllCourse & getCourseById
+
+4--> add a utils fn imageUploader
+
+----BACKEND-CLASS-04---------
+
+1--> rename Tag.js model to Category.js model and same for Tags Controller & its fn's
+
+2--> because tag will be just , separated strings
+
+    course to tag -- one to many reln
+    category to course -- one to many reln
+
+3--> write Section controller - create, update and delete fn
+
+4--> and subsection controller - create , update and delete
+
+5--> create Profile controller - updateProfile fn, deleteAccount fn, getAllUserDetails fn
+
+----BACKEND-CLASS-05---------
+
+1--> read razorpay documentation for integration
+
+2--> create a mail template using html and css so that email sent to user look good
+    under ./mail/templates/
+    courseEnrollmentEmail.js, emailVerificationTemplate.js, paymentSuccess.js and passwordUpdate.js
+
+3--> create payments.js controller - capturePayment and verifySignature fn
+    npm i razorpay
+
+4--> create ./configs/razorpay.js which return an instance of razorpay
+
+----BACKEND-CLASS-06---------
+
+1-->add getCourseDetails fn (which fetch all detail of course) in Course.js controller
+
+2--> add RatingAndReview.js controller - createRatingAndReview, getAverageRating, getAllRatingsAndReviewsByCourseId and getAllRatingsAndReviews fn
+
+3--> add a categoryPageDetails fn in Category controller
+
+----BACKEND-CLASS-07---------
+
+1--> fill all env values
+2--> add cloudinary.js in configs/ folder
+3-> login/signup in razorpay 
+    -account and settings>documentaion>search for api sand box setup
+    https://razorpay.com/docs/api/sandbox-setup/
+
+4--> generate keys in test mode first
+    test api key and test key secret
+
+5--> create server.js file
+6--> all routes file in ./routes
+
+7--> first test Auth.js controller fn using postman
+    simmilarly for other controllers fn
+
+8--> add a updateDP fn in Profile controller which updates user img
+
+9--> now create razorpay webhook in razorpay acc and save that in env file
+    it is a custom secret key that you define when you create a webhook by giving webhook url(Your backend endpoint where you’ll handle Razorpay webhook events e.g. https://yourdomain.com/api/payment/verify ) in your Razorpay Dashboard.
+    save this secret to env file
+
+------------FRONT-END-CLASS01------------------
+
+1--> what is concurrently ? 
+    concurrently is an npm package that allows you to run multiple npm scripts or commands concurrently (in parallel), instead of running them one by one.
+
+2--> setup react + tailwindcss
+
+3--> install concurrently at root proj dir ie. studynotion
+    add this script "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm run server --prefix backend\" \"npm run client --prefix frontend\""
+
+    and this script
+    "server": "nodemon server.js"
+    to backend folder package.json
+
+    and this "client": "vite" to frontend folder package.json
+
+4--> add utils folder and data folder in ./src
+
+5--> add custom theme in index.css
+
+6--> define home route in app.jsx
+
+7--> write home page
+
+8--> npm i react-type-animation
+
+------------FRONT-END-CLASS02------------------
+
+1--> add section 2 and 3 of home page
+2--> added remaining explore page in section 1 called ExploreMore.jsx component
+
+------------FRONT-END-CLASS03-04------------------
+
+1--> first mount navbar component at app.jsx 
+
+2--> now when creating login/signup btn on nav we need to check whether user is logged in and if yes then hide both btn and show dashboard link and a profile icon
+    if(token === null) show btn's
+    else means login show profile icon
+
+3--> will use redux toolkit
+    npm install @reduxjs/toolkit
+    npm install react-redux
+
+4--> wrap App.jsx in <Provider store={store}></Provider> at main.jsx
+
+    -create store at main.jsx and add all reducers to this store
+
+    -since we have multiple reducer eg-auth, cart and profile etc 
+
+    -so we combined all reducer at/redux/reducer/index.jsx and make root reducer and add to the store
+
+    -all these reducers made from slices so create slice for each state auth, cart etc
+
+5--> create apiConnector.js and apis.js in ./services
+    -npm i axios
+
+6--> add login/signup pages
+
+------------FRONT-END-CLASS05------------------
+
+1--> added verify-email page
+   -RegExp.prototype.test() checks if a given string matches the pattern. 
+
+2--> setup authentication login signup logout change password etc with server
+
+3--> protect routes using Private and PublicRoute
+
+4--> add /auth/me - meController and /logout controller fn
+
+5--> add profiledropdown component
+
+------------FRONT-END-CLASS06------------------
+
+1--> add about us page and contact page
+
+2--> npm i react-hook-form
+    used for contactusform component
+
+3--> create contact route and contactUs controller in backend in respective folders
+
+------------FRONT-END-CLASS07------------------
+
+1--> mounting at app.jsx and creating rateus page & project page
+
+2--> npm i framer-motion 
+    framer-motion is a popular React library for animations and transitions.
+
+3--> add a dashboard button in profile drop down which links to /dashboard/profile
+
+------------FRONT-END-CLASS08------------------
+
+1--> adding privacypolicy page and t&c page
+    npm i styled-components
+    styled-components is a CSS-in-JS library for React.
+    It allows you to write actual CSS inside JavaScript and attach the styles directly to components.
+
+2-->Mounting & adding Dashboard page
+    npm install chart.js react-chartjs-2
+    npm i react-dropzone
+    npm i react-player OR USE <video></video> tag we used video tag
+    npm install react-super-responsive-table
+    npm install @ramonak/react-progress-bar
+    npm i react-rating-stars-component
+    npm install plyr plyr-react
+
+------------FRONT-END-CLASS09------------------
+
+1--> adding catalog, course and view course page page nad  and mounting it
+    npm i swiper
+    npm i react-markdown
+    npm i copy-to-clipboard
+
+---------Payment integration---------
+
+1. Webhook URL for Razorpay Dashboard (LOCALHOST)
+
+Razorpay cannot call your localhost directly, so you have two options:
+
+Use ngrok --> Expose your local server:
+    ngrok http 4000 or 
+    npx ngrok http 4000
+
+need to save authentication token by login in ngrok and open ngrok.exe and paste command there to svae token
+
+will get something like:
+https://a1b2c3d4.ngrok-free.app
+
+Now your webhook URL becomes:
+https://a1b2c3d4.ngrok-free.app/api/v1/payments/webhook
+
+// Razorpay needs raw body for signature validation ie /api/v1/payments/webhook
+
+
+<Table className="rounded-xl border border-richblack-800 ">
+        <Thead>
+          <Tr className="flex gap-x-10 rounded-t-md border-b border-b-richblack-800 px-6 py-2">
+            <Th className="flex-1 text-left text-sm font-medium uppercase text-richblack-100">
+              Courses
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Duration
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Price
+            </Th>
+            <Th className="text-left text-sm font-medium uppercase text-richblack-100">
+              Actions
+            </Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {courses?.length === 0 ? (
+            <Tr>
+              <Td className="py-10 text-center text-2xl font-medium text-richblack-100">
+                No courses found
+                {/* TODO: Need to change this state */}
+              </Td>
+            </Tr>
+          ) : (
+            courses?.map((course) => (
+              <Tr
+                key={course._id}
+                className="flex gap-x-10 border-b border-richblack-800 px-6 py-8"
+              >
+                <Td className="flex flex-1 gap-x-4 items-center">
+                  <img
+                    src={course?.thumbnail}
+                    alt={course?.courseName}
+                    className="h-[148px] w-[220px] rounded-lg object-cover"
+                  />
+                  <div className="flex flex-col justify-between gap-2">
+                    <p className="text-lg font-semibold text-richblack-5">
+                      {course.courseName}
+                    </p>
+                    <p className="text-xs text-richblack-300">
+                      {course.courseDescription.split(" ").length >
+                      TRUNCATE_LENGTH
+                        ? course.courseDescription
+                            .split(" ")
+                            .slice(0, TRUNCATE_LENGTH)
+                            .join(" ") + "..."
+                        : course.courseDescription}
+                    </p>
+                    <p className="text-[12px] text-white">
+                      Created: {formatDate(course.createdAt)}
+                    </p>
+                    {course.status === COURSE_STATUS.DRAFT ? (
+                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-pink-100">
+                        <HiClock size={14} />
+                        Drafted
+                      </p>
+                    ) : (
+                      <div className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-yellow-100">
+                        <div className="flex h-3 w-3 items-center justify-center rounded-full bg-yellow-100 text-richblack-700">
+                          <FaCheck size={8} />
+                        </div>
+                        Published
+                      </div>
+                    )}
+                  </div>
+                </Td>
+                <Td className="text-sm font-medium text-richblack-100">
+                  {getTotalCourseDuration(course)}
+                </Td>
+                <Td className="text-sm font-medium text-richblack-100">
+                  ₹{course.price}
+                </Td>
+                <Td className="text-sm font-medium text-richblack-100 ">
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      navigate(`/dashboard/edit-course/${course._id}`);
+                    }}
+                    title="Edit"
+                    className="px-2 transition-all duration-200 hover:scale-110 hover:text-caribbeangreen-300"
+                  >
+                    <FiEdit2 size={20} />
+                  </button>
+                  <button
+                    disabled={loading}
+                    onClick={() => {
+                      setConfirmationModal({
+                        text1: "Do you want to delete this course?",
+                        text2:
+                          "All the data related to this course will be deleted",
+                        btn1Text: !loading ? "Delete" : "Loading...  ",
+                        btn2Text: "Cancel",
+                        btn1Handler: !loading
+                          ? () => handleCourseDelete(course._id)
+                          : () => {},
+                        btn2Handler: !loading
+                          ? () => setConfirmationModal(null)
+                          : () => {},
+                      });
+                    }}
+                    title="Delete"
+                    className="px-1 transition-all duration-200 hover:scale-110 hover:text-[#ff0000]"
+                  >
+                    <RiDeleteBin6Line size={20} />
+                  </button>
+                </Td>
+              </Tr>
+            ))
+          )}
+        </Tbody>
+      </Table>
