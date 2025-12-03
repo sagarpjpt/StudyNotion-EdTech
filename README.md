@@ -56,14 +56,14 @@ cd studynotion
 Install frontend dependencies:
 
 ```bash
-cd client
+cd frontend
 npm install
 ```
 
 Install backend dependencies:
 
 ```bash
-cd server
+cd backend
 npm install
 ```
 
@@ -134,8 +134,4 @@ If you want to contribute:
 3. Make your changes  
 4. Submit a pull request  
 
-## Contact
 
-Shivam Prajapati  
-Portfolio: https://shivamprjpt.netlify.app  
-LinkedIn: https://www.linkedin.com/in/shivam-prajapati-1073a4187  
