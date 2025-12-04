@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import useIntersectionObserver from './useInterSectionObserver';
+import useIntersectionObserver from './useIntersectionObserver';
 
 const countUp = (element, start, end, duration, finalDisplay) => {
   let startTime = null;
