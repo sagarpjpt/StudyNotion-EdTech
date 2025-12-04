@@ -17,7 +17,7 @@ import VerifyEmailRoute from "./components/core/Auth/VerifyEmailRoute.jsx";
 import About from "./pages/About.jsx";
 import Rateus from "./pages/Rateus.jsx";
 import Project from "./pages/Project.jsx";
-import PrivacyPolicy from "./pages/privacyPolicy.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsAndConditions from "./pages/TermsAndConditions.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import MyProfile from "./components/core/Dashboard/MyProfile.jsx";
