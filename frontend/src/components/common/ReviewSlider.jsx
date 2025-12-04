@@ -64,7 +64,10 @@ const ReviewSlider = () => {
 
 const ReviewCard = ({ review }) => {
   return (
-    <div className="border border-richblack-600 bg-richblack-700 p-5 rounded-xl shadow-md text-richblack-5 h-full flex flex-col">
+    <div
+      className="border border-richblack-600 bg-richblack-700 p-5 rounded-xl shadow-md text-richblack-5 
+        flex flex-col h-[180px]"
+    >
       <div className="flex items-center gap-3 mb-3">
         <div className="w-12 h-12 rounded-full bg-blue-200 text-richblack-900 flex items-center justify-center font-bold text-lg">
           {review?.user?.firstName?.charAt(0)?.toUpperCase()}
@@ -80,14 +83,14 @@ const ReviewCard = ({ review }) => {
         </div>
       </div>
 
-      {/* Rating */}
       <p className="text-yellow-50 text-lg">
         {"★".repeat(Math.round(review.rating))}
         {"☆".repeat(5 - Math.round(review.rating))}
       </p>
 
-      {/* Review Text */}
-      <p className="mt-3 text-richblack-25 text-sm">{review.review}</p>
+      <p className="mt-3 text-richblack-25 text-sm flex-grow overflow-hidden">
+        {review.review}
+      </p>
     </div>
   );
 };

@@ -181,8 +181,8 @@ const Catalog = () => {
         <div className="text-2xl sm:text-3xl font-semibold mb-0 text-richblack-5 border-l-4 border-yellow-50 pl-4">3. Frequently Bought</div>
 
         <div className="py-8">
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {mostSelling?.slice(0, 4).map((course, i) => (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            {mostSelling?.slice(0, 6).map((course, i) => (
               <Course_Card course={course} key={course?._id || i} Height={"max-h-[360px]"} />
             ))}
           </div>

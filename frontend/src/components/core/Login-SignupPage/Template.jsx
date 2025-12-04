@@ -25,15 +25,17 @@ function Template({ title, desc1, desc2, image, formtype, setLoading}) {
           <LoginForm setLoading={setLoading} />
         )}
 
-        <div className="flex w-full items-center my-4 gap-x-2">
+        {/* OR text */}
+        {/* <div className="flex w-full items-center my-4 gap-x-2">
           <div className="w-full h-[2px] bg-richblack-700"></div>
           <p className="text-richblack-700 font-medium leading-[1.375rem]">
             OR
           </p>
           <div className="w-full h-[2px] bg-richblack-700"></div>
-        </div>
+        </div> */}
 
-        <div>
+        {/* signup signin using google TODO task */}
+        {/* <div>
           {formtype === "signup" ? (
             <button
               className="w-full flex justify-center items-center 
@@ -53,7 +55,7 @@ function Template({ title, desc1, desc2, image, formtype, setLoading}) {
               sign in with google
             </button>
           )}
-        </div>
+        </div> */}
       </div>
 
       {/* right part img div */}
