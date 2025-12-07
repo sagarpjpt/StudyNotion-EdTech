@@ -37,7 +37,11 @@ exports.resetPasswordToken = async (req, res) => {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&userId=${user._id}`;
 
     // send url via email
-    await mailSender(user.email, "Password Reset Request", resetPasswordTemplate(resetUrl));
+    await mailSender(
+      user.email,
+      "Password Reset Request",
+      resetPasswordTemplate(resetUrl)
+    );
 
     // return res
     return res.status(200).json({

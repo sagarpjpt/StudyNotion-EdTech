@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const mailSender = require("../utils/mailSender");
-const otpTemplate = require("../mail/templates/emailVerificationTemplate").default;
+const otpTemplate =
+  require("../mail/templates/emailVerificationTemplate").default;
 const otpSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -20,7 +21,7 @@ const otpSchema = new mongoose.Schema({
         TTL index	         thinks doc is expired	                expires after 5 min
         Result	           instantly deleted	                    lives for 5 min ✅
     
-    */ 
+    */
     expires: 5 * 60, // this document expires in 5 min
   },
 });

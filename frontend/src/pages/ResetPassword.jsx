@@ -13,7 +13,7 @@ export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const userId = searchParams.get("userId");
-  console.log("Token:", token, "UserID:", userId);
+  // console.log("Token:", token, "UserID:", userId);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);

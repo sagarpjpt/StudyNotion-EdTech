@@ -18,23 +18,22 @@ const ContactUsForm = () => {
   const submitContactForm = async (data) => {
     try {
       setLoading(true);
-      console.log(data)
+      // console.log(data)
       const res = await apiConnector(
         "POST",
         contactusEndpoint.CONTACT_US_API,
         data
       );
-      if(res?.data?.success){
-        toast.success("Thank You! We Will Contact You Shortly")
-      }
-      else {
-        toast.error(res.data.message)
+      if (res?.data?.success) {
+        toast.success("Thank You! We Will Contact You Shortly");
+      } else {
+        toast.error(res.data.message);
       }
     } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message);
-      toast.error("Please Fill The Form Again!")
-    } finally{
-      setLoading(false)
+      // console.log("ERROR MESSAGE - ", error.message);
+      toast.error("Please Fill The Form Again!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,9 +49,12 @@ const ContactUsForm = () => {
     }
   }, [reset, isSubmitSuccessful]);
 
-  if(loading) return <div className="flex items-center justify-center">
-    <Spinner />
-  </div>
+  if (loading)
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   return (
     <form
@@ -64,7 +66,10 @@ const ContactUsForm = () => {
       <div className="flex flex-col lg:flex-row gap-5">
         {/* First Name */}
         <div className="flex flex-col gap-1 lg:w-1/2">
-          <label htmlFor="firstname" className="text-sm font-medium text-richblack-100">
+          <label
+            htmlFor="firstname"
+            className="text-sm font-medium text-richblack-100"
+          >
             First Name <span className="text-yellow-50">*</span>
           </label>
           <input
@@ -83,7 +88,10 @@ const ContactUsForm = () => {
 
         {/* Last Name */}
         <div className="flex flex-col gap-1 lg:w-1/2">
-          <label htmlFor="lastname" className="text-sm font-medium text-richblack-100">
+          <label
+            htmlFor="lastname"
+            className="text-sm font-medium text-richblack-100"
+          >
             Last Name
           </label>
           <input
@@ -98,7 +106,10 @@ const ContactUsForm = () => {
 
       {/* ========= EMAIL ========= */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium text-richblack-100">
+        <label
+          htmlFor="email"
+          className="text-sm font-medium text-richblack-100"
+        >
           Email Address <span className="text-yellow-50">*</span>
         </label>
         <input
@@ -117,7 +128,10 @@ const ContactUsForm = () => {
 
       {/* ========= PHONE ========= */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="phonenumber" className="text-sm font-medium text-richblack-100">
+        <label
+          htmlFor="phonenumber"
+          className="text-sm font-medium text-richblack-100"
+        >
           Phone Number <span className="text-yellow-50">*</span>
         </label>
         <div className="flex gap-3">
@@ -159,7 +173,10 @@ const ContactUsForm = () => {
 
       {/* ========= MESSAGE ========= */}
       <div className="flex flex-col gap-1">
-        <label htmlFor="message" className="text-sm font-medium text-richblack-100">
+        <label
+          htmlFor="message"
+          className="text-sm font-medium text-richblack-100"
+        >
           Message <span className="text-yellow-50">*</span>
         </label>
         <textarea
@@ -181,7 +198,10 @@ const ContactUsForm = () => {
         disabled={loading}
         type="submit"
         className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[14px] font-semibold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]
-          ${!loading && "transition-all duration-200 hover:scale-95 hover:shadow-none"}
+          ${
+            !loading &&
+            "transition-all duration-200 hover:scale-95 hover:shadow-none"
+          }
           disabled:bg-richblack-500`}
       >
         {loading ? "Sending..." : "Send Message"}

@@ -39,14 +39,14 @@ export default function CourseInformationForm() {
       setLoading(true);
       const res = await apiConnector("GET", categories.CATEGORIES_API);
       if (res?.data?.categories.length > 0) {
-        console.log("categories", res?.data?.categories);
+        // console.log("categories", res?.data?.categories);
         setCourseCategories(res?.data?.categories);
       }
       setLoading(false);
     };
     // if form is in edit mode
     if (editCourse) {
-      // console.log("data populated", editCourse)
+      // // console.log("data populated", editCourse)
       setValue("courseTitle", course.courseName);
       setValue("courseShortDesc", course.courseDescription);
       setValue("coursePrice", course.price);
@@ -95,7 +95,7 @@ export default function CourseInformationForm() {
 
   //   handle next button click
   const onSubmit = async (data) => {
-    console.log("course info", data);
+    // console.log("course info", data);
 
     // ==============================
     //           EDIT MODE

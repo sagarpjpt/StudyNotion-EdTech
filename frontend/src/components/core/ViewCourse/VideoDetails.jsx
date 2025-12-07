@@ -38,7 +38,7 @@ export default function VideoDetails() {
       const playerObj = playerRef.current;
 
       if (playerObj?.plyr && playerObj.plyr.ready) {
-        console.log("🎉 Plyr is ready:", playerObj.plyr);
+        // console.log("🎉 Plyr is ready:", playerObj.plyr);
 
         const player = playerObj.plyr;
         const handleEnded = () => setVideoEnded(true);
@@ -273,7 +273,11 @@ export default function VideoDetails() {
       </p>
 
       {/* ------------------ MOBILE SECTIONS ACCORDION ------------------ */}
-      <MobileSectionAccordion courseSectionData={courseSectionData} activeSection={activeSection} toggleSection={toggleSection} />
+      <MobileSectionAccordion
+        courseSectionData={courseSectionData}
+        activeSection={activeSection}
+        toggleSection={toggleSection}
+      />
 
       {/* ------------------ PREV / NEXT BUTTONS (ALWAYS VISIBLE) ------------------ */}
       <div className="flex justify-between mt-4">
@@ -292,44 +296,48 @@ export default function VideoDetails() {
   );
 }
 
-const MobileSectionAccordion = ({courseSectionData, activeSection, toggleSection}) => {
+const MobileSectionAccordion = ({
+  courseSectionData,
+  activeSection,
+  toggleSection,
+}) => {
   return (
     <div className="md:hidden">
-        {courseSectionData.map((section) => (
-          <div key={section._id}>
-            {/* Section Header */}
-            <button
-              className="w-full bg-richblack-700 p-3 text-left rounded-md flex justify-between items-center"
-              onClick={() => toggleSection(section._id)}
-            >
-              {section.sectionName}
-              <BsChevronDown
-                className={`transition-transform ${
-                  activeSection === section._id ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+      {courseSectionData.map((section) => (
+        <div key={section._id}>
+          {/* Section Header */}
+          <button
+            className="w-full bg-richblack-700 p-3 text-left rounded-md flex justify-between items-center"
+            onClick={() => toggleSection(section._id)}
+          >
+            {section.sectionName}
+            <BsChevronDown
+              className={`transition-transform ${
+                activeSection === section._id ? "rotate-180" : ""
+              }`}
+            />
+          </button>
 
-            {/* Subsections */}
-            {activeSection === section._id && (
-              <div className="bg-richblack-800 mt-1 p-2 rounded-md">
-                {section.subSection.map((topic) => (
-                  <p
-                    key={topic._id}
-                    onClick={() =>
-                      navigate(
-                        `/view-course/${courseId}/section/${section._id}/sub-section/${topic._id}`
-                      )
-                    }
-                    className="text-sm p-2 rounded-md hover:bg-richblack-700"
-                  >
-                    {topic.title}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-  )
-}
+          {/* Subsections */}
+          {activeSection === section._id && (
+            <div className="bg-richblack-800 mt-1 p-2 rounded-md">
+              {section.subSection.map((topic) => (
+                <p
+                  key={topic._id}
+                  onClick={() =>
+                    navigate(
+                      `/view-course/${courseId}/section/${section._id}/sub-section/${topic._id}`
+                    )
+                  }
+                  className="text-sm p-2 rounded-md hover:bg-richblack-700"
+                >
+                  {topic.title}
+                </p>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};

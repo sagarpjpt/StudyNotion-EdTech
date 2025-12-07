@@ -21,7 +21,7 @@ export default function ChangeProfilePicture({ user, setUser }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    // console.log(file)
+    // // console.log(file)
     if (file) {
       setImageFile(file);
       previewFile(file);
@@ -38,13 +38,13 @@ export default function ChangeProfilePicture({ user, setUser }) {
 
   const handleFileUpload = async () => {
     try {
-      console.log("uploading...");
+      // console.log("uploading...");
       setLoading(true);
       const formData = new FormData();
       formData.append("displayPicture", imageFile);
-      // console.log("FormData contents:");
+      // // console.log("FormData contents:");
       // for (let pair of formData.entries()) {
-      //   console.log(pair[0], pair[1]);
+      //   // console.log(pair[0], pair[1]);
       // }
       const res = await apiConnector("PUT", profile.UPDATE_DP, formData, {
         "Content-Type": "multipart/form-data",
@@ -55,7 +55,7 @@ export default function ChangeProfilePicture({ user, setUser }) {
         toast.error(res?.data?.message);
       }
     } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message);
+      // console.log("ERROR MESSAGE - ", error.message);
       toast.error(error.message);
     } finally {
       setLoading(false);

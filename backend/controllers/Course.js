@@ -17,7 +17,7 @@ exports.createCourse = async (req, res) => {
       tag,
       category,
       instructions,
-      status
+      status,
     } = req.body;
 
     const thumbnail = req.files.thumbnailImage;
@@ -98,7 +98,6 @@ exports.createCourse = async (req, res) => {
       message: "Course created successfully",
       course: newCourse,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -120,7 +119,7 @@ exports.editCourse = async (req, res) => {
       tag,
       category,
       instructions,
-      status
+      status,
     } = req.body;
 
     // validation: courseId must exist
@@ -232,7 +231,6 @@ exports.editCourse = async (req, res) => {
       message: "Course updated successfully",
       course: updatedCourse,
     });
-
   } catch (error) {
     console.log("Error in editCourse:", error);
     return res.status(500).json({
@@ -303,7 +301,7 @@ exports.getCourseDetails = async (req, res) => {
       .populate("category")
       .populate({
         path: "ratingAndReviews",
-        populate: { path: "user", select: "firstName lastName" }, 
+        populate: { path: "user", select: "firstName lastName" },
       })
       .exec();
 
@@ -330,13 +328,12 @@ exports.getAllCoursesOfInstructor = async (req, res) => {
     const instructor = await User.findById(userId)
       .populate({
         path: "courses",
-        populate:
-          {
-            path: "courseContent", // array of sections
-            populate: {
-              path: "subSection", // array of subsections
-            },
-          }
+        populate: {
+          path: "courseContent", // array of sections
+          populate: {
+            path: "subSection", // array of subsections
+          },
+        },
       })
       .exec();
 
@@ -352,7 +349,6 @@ exports.getAllCoursesOfInstructor = async (req, res) => {
       message: "Courses fetched successfully",
       courses: instructor.courses, // return only array of courses
     });
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -426,7 +422,6 @@ exports.deleteCourse = async (req, res) => {
       success: true,
       message: "Course deleted successfully",
     });
-
   } catch (error) {
     console.error("Delete course error:", error);
     return res.status(500).json({
@@ -448,8 +443,8 @@ exports.getStudentEnrolledCourses = async (req, res) => {
         path: "courses",
         populate: {
           path: "courseContent",
-          populate: { path: "subSection" }
-        }
+          populate: { path: "subSection" },
+        },
       })
       .exec();
 
@@ -476,7 +471,7 @@ exports.getStudentEnrolledCourses = async (req, res) => {
       // 2) Fetch this student's progress document for this course
       const progress = await CourseProgress.findOne({
         userId,
-        courseId: course._id
+        courseId: course._id,
       });
 
       // 3) Completed lecture count
@@ -502,7 +497,6 @@ exports.getStudentEnrolledCourses = async (req, res) => {
       message: "Enrolled courses fetched successfully",
       courses: coursesWithProgress,
     });
-
   } catch (error) {
     console.error("Error fetching enrolled courses:", error);
     return res.status(500).json({

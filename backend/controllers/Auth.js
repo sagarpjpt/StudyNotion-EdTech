@@ -280,40 +280,41 @@ exports.changePassword = async (req, res) => {
 
 // verify cookie
 exports.meController = async (req, res) => {
-  if(req.user) {
-    const userData = await User.findById(req.user.userId)
-    return res.json({success: true,
+  if (req.user) {
+    const userData = await User.findById(req.user.userId);
+    return res.json({
+      success: true,
       user: {
         ...req.user,
         firstName: userData.firstName,
-        lastName: userData.lastName
-      }
-    })
+        lastName: userData.lastName,
+      },
+    });
   }
-  return res.status(401).json({success: false, message: "Not Authenticated"})
-}
+  return res.status(401).json({ success: false, message: "Not Authenticated" });
+};
 
 // logout
 exports.logout = async (req, res) => {
-  try{
+  try {
     // clear token cookie
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
       sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
       path: "/",
-    })
+    });
 
     // return res
     return res.status(200).json({
       success: true,
-      message: "Logged Out Successfully"
-    })
-  } catch(e) {
-    console.log('error during logout:', e)
+      message: "Logged Out Successfully",
+    });
+  } catch (e) {
+    console.log("error during logout:", e);
     return res.status(500).json({
       success: false,
-      message: "Error while logging out"
-    })
+      message: "Error while logging out",
+    });
   }
-}
+};

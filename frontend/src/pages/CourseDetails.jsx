@@ -131,7 +131,7 @@ function CourseDetails() {
   // buy course
   const handleBuyCourse = async () => {
     const { loggedIn, user: loggedUser } = await checkLogin();
-    console.log(loggedUser)
+    // console.log(loggedUser)
 
     if (!loggedIn) {
       setConfirmationModal({
@@ -152,10 +152,10 @@ function CourseDetails() {
 
     try{
 
-      console.log("Sending to backend:", {
-        courseId,
-        userId: loggedUser.userId
-      });
+      // console.log("Sending to backend:", {
+      //   courseId,
+      //   userId: loggedUser.userId
+      // });
       const res = await apiConnector('POST', payment.CAPTURE, { courseId, userId: loggedUser.userId })
 
       if(res?.data?.success) {
@@ -166,7 +166,7 @@ function CourseDetails() {
     }
 
     // later you'll implement buyCourse
-    console.log("Proceed to buy course");
+    // console.log("Proceed to buy course");
   };
 
   // 

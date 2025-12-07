@@ -1,15 +1,15 @@
 const SubSection = require("../models/SubSection");
 const Section = require("../models/Section");
 const { uploadVideoToCloudinary } = require("../utils/videoUploader");
-require('dotenv').config();
-const CourseProgress = require('../models/CourseProgress')
+require("dotenv").config();
+const CourseProgress = require("../models/CourseProgress");
 
 // create subsection
 
 exports.createSubSection = async (req, res) => {
   try {
     // fetch data from req
-    const {sectionId, title, timeDuration, description } = req.body;
+    const { sectionId, title, timeDuration, description } = req.body;
 
     // fetch video file from req
     const videoFile = req.files.videoFile;
@@ -42,21 +42,20 @@ exports.createSubSection = async (req, res) => {
     // update section with new subsection
     const updatedSection = await Section.findByIdAndUpdate(
       sectionId,
-      { $push: { subSection
-        : newSubSection._id } },
+      { $push: { subSection: newSubSection._id } },
       { new: true }
     ).populate("subSection");
 
     // return response
     return res.status(201).json({
       success: true,
-        message: "SubSection created successfully",
-        updatedSection,
+      message: "SubSection created successfully",
+      updatedSection,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-        message: "Internal Server Error: " + error.message,
+      message: "Internal Server Error: " + error.message,
     });
   }
 };
@@ -94,7 +93,7 @@ exports.deleteSubSection = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-        message: "Internal Server Error: " + error.message,
+      message: "Internal Server Error: " + error.message,
     });
   }
 };
@@ -110,7 +109,7 @@ exports.updateSubSection = async (req, res) => {
 
     // validation
     if (!subSectionId || !title || !timeDuration || !description) {
-        return res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
@@ -119,7 +118,7 @@ exports.updateSubSection = async (req, res) => {
     // upload video to cloudinary if new video file is provided
     let videoUrl = null;
     if (videoFile) {
-        const uploadedVideo = await uploadImageToCloudinary(
+      const uploadedVideo = await uploadImageToCloudinary(
         videoFile,
         process.env.COURSE_VIDEO_FOLDER
       );
@@ -136,13 +135,13 @@ exports.updateSubSection = async (req, res) => {
     // return response
     return res.status(200).json({
       success: true,
-        message: "SubSection updated successfully",
-        updatedSubSection,
+      message: "SubSection updated successfully",
+      updatedSubSection,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-        message: "Internal Server Error: " + error.message,
+      message: "Internal Server Error: " + error.message,
     });
   }
 };
@@ -177,4 +176,4 @@ exports.markLectureCompleted = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });
   }
-}
+};

@@ -1,11 +1,13 @@
-const {instance} = require("../config/razorpay");
+const { instance } = require("../config/razorpay");
 const Course = require("../models/Course");
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
 const Payment = require("../models/Payment");
-const { courseEnrollmentEmail} = require("../mail/templates/courseEnrollmentEmail");
+const {
+  courseEnrollmentEmail,
+} = require("../mail/templates/courseEnrollmentEmail");
 const crypto = require("crypto");
-const { paymentSuccess } = require('../mail/templates/paymentSuccess')
+const { paymentSuccess } = require("../mail/templates/paymentSuccess");
 
 exports.capturePayment = async (req, res) => {
   try {
@@ -15,7 +17,9 @@ exports.capturePayment = async (req, res) => {
     // console.log("REQ BODY:", req.body);
 
     if (!userId) {
-      return res.status(400).json({ success: false, message: "userId is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "userId is required" });
     }
 
     // normalize to array
@@ -25,36 +29,53 @@ exports.capturePayment = async (req, res) => {
     } else if (courseId) {
       coursesArray = [courseId];
     } else {
-      return res.status(400).json({ success: false, message: "courseId or courseIds required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "courseId or courseIds required" });
     }
 
     // fetch courses and compute total
     const courses = await Course.find({ _id: { $in: coursesArray } });
     if (!courses || courses.length === 0) {
-      return res.status(404).json({ success: false, message: "No valid courses found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "No valid courses found" });
     }
 
     // check for any missing ids
-    const foundIds = courses.map(c => c._id.toString());
-    const missing = coursesArray.filter(id => !foundIds.includes(id));
+    const foundIds = courses.map((c) => c._id.toString());
+    const missing = coursesArray.filter((id) => !foundIds.includes(id));
     if (missing.length) {
-      return res.status(404).json({ success: false, message: `Courses not found: ${missing.join(",")}` });
+      return res.status(404).json({
+        success: false,
+        message: `Courses not found: ${missing.join(",")}`,
+      });
     }
 
     // validate user
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // filter out courses user already enrolled in
-    const notEnrolledCourses = courses.filter(c => !user.courses.includes(c._id.toString()));
+    const notEnrolledCourses = courses.filter(
+      (c) => !user.courses.includes(c._id.toString())
+    );
     if (notEnrolledCourses.length === 0) {
-      return res.status(400).json({ success: false, message: "User already enrolled in all selected courses" });
+      return res.status(400).json({
+        success: false,
+        message: "User already enrolled in all selected courses",
+      });
     }
 
     // compute total amount (INR paise)
-    const totalAmount = notEnrolledCourses.reduce((sum, c) => sum + (c.price * 100), 0);
+    const totalAmount = notEnrolledCourses.reduce(
+      (sum, c) => sum + c.price * 100,
+      0
+    );
 
     const options = {
       amount: totalAmount,
@@ -63,8 +84,10 @@ exports.capturePayment = async (req, res) => {
       notes: {
         userId: userId,
         // store course ids as JSON string
-        courseIds: JSON.stringify(notEnrolledCourses.map(c => c._id.toString()))
-      }
+        courseIds: JSON.stringify(
+          notEnrolledCourses.map((c) => c._id.toString())
+        ),
+      },
     };
 
     const order = await instance.orders.create(options);
@@ -76,16 +99,19 @@ exports.capturePayment = async (req, res) => {
       amount: order.amount,
       currency: order.currency,
       // optionally return course summary to frontend
-      courses: notEnrolledCourses.map(c => ({
+      courses: notEnrolledCourses.map((c) => ({
         _id: c._id,
         courseName: c.courseName,
         price: c.price,
-        thumbnail: c.thumbnail
-      }))
+        thumbnail: c.thumbnail,
+      })),
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Internal Server Error: " + error.message });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error: " + error.message,
+    });
   }
 };
 
@@ -101,17 +127,20 @@ exports.verifySignature = async (req, res) => {
       .digest("hex");
 
     if (digest !== signature) {
-      return res.status(400).json({ success: false, message: "Invalid signature" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid signature" });
     }
 
     // Convert raw buffer to JSON
     const body = JSON.parse(req.body.toString("utf8"));
     console.log("EVENT RECEIVED:", body.event);
 
-
     const event = body.event;
     if (event !== "payment.captured") {
-      return res.status(200).json({ success: true, message: `Ignored event: ${event}` });
+      return res
+        .status(200)
+        .json({ success: true, message: `Ignored event: ${event}` });
     }
 
     // Extract payment entity
@@ -122,7 +151,10 @@ exports.verifySignature = async (req, res) => {
     const courseIds = JSON.parse(notes.courseIds || "[]");
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    if (!user)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
 
     // SAVE PAYMENT RECORD IN DB
     const paymentRecord = await Payment.create({
@@ -139,13 +171,17 @@ exports.verifySignature = async (req, res) => {
     console.log("Payment Saved:", paymentRecord);
 
     // sending payment success email
-    await mailSender(user.email, "Payment Successful - StudyNotion", paymentSuccess(
-      paymentEntity.amount / 100,      // convert paise to rs
-      paymentEntity.id,               // paymentId
-      paymentEntity.order_id,         // orderId
-      user.firstName,
-      user.lastName
-    ))
+    await mailSender(
+      user.email,
+      "Payment Successful - StudyNotion",
+      paymentSuccess(
+        paymentEntity.amount / 100, // convert paise to rs
+        paymentEntity.id, // paymentId
+        paymentEntity.order_id, // orderId
+        user.firstName,
+        user.lastName
+      )
+    );
 
     // Enroll user in each course
     for (const cId of courseIds) {
@@ -161,10 +197,7 @@ exports.verifySignature = async (req, res) => {
         const emailResponse = await mailSender(
           user.email,
           "Congratulations! You've been enrolled in a new course",
-          courseEnrollmentEmail(
-            course.courseName,
-            user.firstName,
-          )
+          courseEnrollmentEmail(course.courseName, user.firstName)
         );
       }
     }
@@ -175,7 +208,6 @@ exports.verifySignature = async (req, res) => {
       success: true,
       message: "Payment verified, saved & user enrolled",
     });
-
   } catch (error) {
     console.error("Webhook error:", error);
     return res.status(500).json({
@@ -184,4 +216,3 @@ exports.verifySignature = async (req, res) => {
     });
   }
 };
-

@@ -1,6 +1,5 @@
 import { toast } from "react-hot-toast";
 
-
 export const openRazorpayCheckout = (orderData, user, navigate) => {
   const options = {
     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -12,7 +11,7 @@ export const openRazorpayCheckout = (orderData, user, navigate) => {
 
     // after successful payment
     handler: function (response) {
-      console.log("Payment Success:", response);
+      // console.log("Payment Success:", response);
       toast.success("Payment successful! Processing your enrollment...");
 
       setTimeout(() => {

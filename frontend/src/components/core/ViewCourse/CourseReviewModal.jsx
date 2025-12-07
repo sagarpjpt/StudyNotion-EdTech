@@ -96,7 +96,7 @@ export default function CourseReviewModal({ setReviewModal }) {
         rating: rating,
         review: review,
       };
-      console.log("PAYLOAD SENT ===>", payload);
+      // console.log("PAYLOAD SENT ===>", payload);
       const res = await apiConnector("POST", ratingReview.CREATE_RR, payload);
 
       if (res?.data?.success) {
@@ -114,7 +114,7 @@ export default function CourseReviewModal({ setReviewModal }) {
   };
 
   // const onSubmit = async (data) => {
-  //   console.log(data)
+  //   // console.log(data)
   // }
 
   if (loading) return <Spinner />;
@@ -150,12 +150,17 @@ export default function CourseReviewModal({ setReviewModal }) {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="mt-6 flex flex-col"
+          >
             <div className="flex justify-center">
               <div className="flex items-center gap-3">
                 {Array.from({ length: 5 }).map((_, idx) => {
-                  const i = idx + 1
-                  const filled = hoverRating ? i <= hoverRating : i <= ratingLocal
+                  const i = idx + 1;
+                  const filled = hoverRating
+                    ? i <= hoverRating
+                    : i <= ratingLocal;
                   return (
                     <button
                       key={i}
@@ -166,17 +171,24 @@ export default function CourseReviewModal({ setReviewModal }) {
                       onBlur={() => setHoverRating(0)}
                       onClick={() => ratingChanged(i)}
                       aria-label={`Set rating ${i}`}
-                      className={`transform transition-all duration-150 ease-out focus:outline-none ${filled ? "text-yellow-50 scale-110" : "text-richblack-400 hover:text-yellow-50 hover:scale-110"}`}
+                      className={`transform transition-all duration-150 ease-out focus:outline-none ${
+                        filled
+                          ? "text-yellow-50 scale-110"
+                          : "text-richblack-400 hover:text-yellow-50 hover:scale-110"
+                      }`}
                     >
                       <span className="text-5xl leading-none">★</span>
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
 
             <div className="mt-4 flex w-full flex-col space-y-2">
-              <label className="text-sm text-richblack-5" htmlFor="courseExperience">
+              <label
+                className="text-sm text-richblack-5"
+                htmlFor="courseExperience"
+              >
                 Add Your Experience <sup className="text-pink-200">*</sup>
               </label>
               <textarea
