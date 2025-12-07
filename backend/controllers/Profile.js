@@ -78,7 +78,10 @@ exports.deleteAccount = async (req, res) => {
 
     // clear token cookie
     res.clearCookie("token", {
-      httpOnly: true
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+      path: "/",
     })
 
     // delete profile

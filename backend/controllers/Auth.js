@@ -199,6 +199,9 @@ exports.login = async (req, res) => {
     const options = {
       httpOnly: true,
       expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 days
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+      path: "/",
     };
     res.cookie("token", token, options).status(200).json({
       success: true,
@@ -295,7 +298,10 @@ exports.logout = async (req, res) => {
   try{
     // clear token cookie
     res.clearCookie("token", {
-      httpOnly: true
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "lax",
+      path: "/",
     })
 
     // return res
