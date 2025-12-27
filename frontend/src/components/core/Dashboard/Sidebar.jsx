@@ -31,7 +31,7 @@ export default function Sidebar() {
         localStorage.removeItem("verifyEmailPending");
         localStorage.removeItem("verifyEmailFor");
         localStorage.removeItem("signupPayload");
-
+        localStorage.removeItem("token");
         localStorage.setItem("logoutEvent", "true");
         navigate("/login");
       } else {

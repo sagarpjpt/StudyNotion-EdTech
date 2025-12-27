@@ -43,6 +43,7 @@ const ProfileDropDown = () => {
         localStorage.removeItem("verifyEmailPending");
         localStorage.removeItem("verifyEmailFor");
         localStorage.removeItem("signupPayload");
+        localStorage.removeItem("token");
         navigate("/login");
       } else {
         toast.error("Logout failed");

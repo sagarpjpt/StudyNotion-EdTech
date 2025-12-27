@@ -8,6 +8,7 @@ import VideoDetailsSidebar from "../components/core/ViewCourse/VideoDetailsSideb
 import { BsList } from "react-icons/bs";
 import { apiConnector } from "../services/apiConnector";
 import { courses } from "../services/apis";
+import { useNavigate } from "react-router-dom";
 
 import {
   setCompletedLectures,
@@ -21,6 +22,7 @@ export default function ViewCourse() {
   const dispatch = useDispatch();
   const [reviewModal, setReviewModal] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
+  const navigate = useNavigate()
   useEffect(() => {
     (async () => {
       try {
@@ -95,12 +97,12 @@ export default function ViewCourse() {
       {showMobileSidebar && (
         <div className="fixed inset-0 bg-black/60 z-50">
           <div className="absolute left-0 top-0 w-[80%] h-full bg-richblack-800 p-4 overflow-y-auto">
-            <VideoDetailsSidebar setReviewModal={setReviewModal} />
+            <VideoDetailsSidebar setReviewModal={setReviewModal} view={"mobile"} setShowMobileSidebar={setShowMobileSidebar} />
           </div>
-          <div
+          {/* <div
             className="absolute inset-0"
             onClick={() => setShowMobileSidebar(false)}
-          />
+          /> */}
         </div>
       )}
 
@@ -114,8 +116,6 @@ export default function ViewCourse() {
           <Outlet />
         </div>
       </div>
-
-      
 
       {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
     </>

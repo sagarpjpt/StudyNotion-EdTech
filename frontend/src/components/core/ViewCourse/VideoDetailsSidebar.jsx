@@ -6,7 +6,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import IconBtn from "../../common/IconBtn";
 
-export default function VideoDetailsSidebar({ setReviewModal }) {
+export default function VideoDetailsSidebar({
+  setReviewModal,
+  view,
+  setShowMobileSidebar,
+}) {
   const [activeStatus, setActiveStatus] = useState("");
   const [videoBarActive, setVideoBarActive] = useState("");
   const navigate = useNavigate();
@@ -45,9 +49,15 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
           <div className="flex w-full items-center justify-between">
             {/* Back button */}
             <div
-              onClick={() => navigate(`/dashboard/enrolled-courses`)}
+              onClick={() => {
+                if (view === "mobile") {
+                  setShowMobileSidebar(false);
+                } else {
+                  navigate(`/dashboard/enrolled-courses`);
+                }
+              }}
               className="flex h-10 w-10 items-center justify-center rounded-full bg-richblack-700 
-        text-richblack-200 hover:bg-richblack-600 hover:scale-95 transition-all shadow-inner cursor-pointer"
+  text-richblack-200 hover:bg-richblack-600 hover:scale-95 transition-all shadow-inner cursor-pointer"
               title="Back"
             >
               <IoIosArrowBack size={22} />
@@ -107,10 +117,17 @@ export default function VideoDetailsSidebar({ setReviewModal }) {
                       <div
                         key={i}
                         onClick={() => {
-                          navigate(
-                            `/view-course/${courseEntireData?._id}/section/${course?._id}/sub-section/${topic?._id}`
-                          );
-                          setVideoBarActive(topic._id);
+                          if (view === "mobile") {
+                            navigate(
+                              `/view-course/${courseEntireData?._id}/section/${course?._id}/sub-section/${topic?._id}`
+                            );
+                            setShowMobileSidebar(false);
+                          } else {
+                            navigate(
+                              `/view-course/${courseEntireData?._id}/section/${course?._id}/sub-section/${topic?._id}`
+                            );
+                            setVideoBarActive(topic._id);
+                          }
                         }}
                         className={`flex items-center gap-5 px-6 py-3 text-sm cursor-pointer rounded-lg mt-1
                     ${

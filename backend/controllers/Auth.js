@@ -207,6 +207,7 @@ exports.login = async (req, res) => {
       success: true,
       message: "Logged In Successfully",
       user: payload,
+      token
     });
   } catch (e) {
     console.log("error while login", e);

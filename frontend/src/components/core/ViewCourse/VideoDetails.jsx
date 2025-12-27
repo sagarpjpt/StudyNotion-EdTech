@@ -38,7 +38,7 @@ export default function VideoDetails() {
       const playerObj = playerRef.current;
 
       if (playerObj?.plyr && playerObj.plyr.ready) {
-        // console.log("🎉 Plyr is ready:", playerObj.plyr);
+        // console.log(" Plyr is ready:", playerObj.plyr);
 
         const player = playerObj.plyr;
         const handleEnded = () => setVideoEnded(true);
@@ -57,7 +57,7 @@ export default function VideoDetails() {
       if (attempts >= maxAttempts) {
         clearInterval(interval);
         interval = null;
-        console.warn("❌ Plyr never became ready.");
+        console.warn("Plyr never became ready.");
       }
     }, 200);
 
@@ -277,17 +277,33 @@ export default function VideoDetails() {
         courseSectionData={courseSectionData}
         activeSection={activeSection}
         toggleSection={toggleSection}
+        navigate={navigate}
+        courseId={courseId}
       />
 
       {/* ------------------ PREV / NEXT BUTTONS (ALWAYS VISIBLE) ------------------ */}
       <div className="flex justify-between mt-4">
         {!isFirstVideo() && (
-          <button className="blackButton" onClick={goToPrevVideo}>
+          <button
+            className="blackButton bg-richblack-600 px-4 py-2 rounded-md cursor-pointer"
+            onClick={goToPrevVideo}
+          >
             Prev
           </button>
         )}
+        {!completedLectures.includes(subSectionId) && (
+          <IconBtn
+            text={loading ? "Loading..." : "Mark as Completed"}
+            disabled={loading}
+            onclick={handleComplete}
+            customClasses="px-4 py-2"
+          />
+        )}
         {!isLastVideo() && (
-          <button className="blackButton" onClick={goToNextVideo}>
+          <button
+            className="blackButton bg-richblack-600 px-4 py-2 rounded-md cursor-pointer"
+            onClick={goToNextVideo}
+          >
             Next
           </button>
         )}
@@ -300,6 +316,8 @@ const MobileSectionAccordion = ({
   courseSectionData,
   activeSection,
   toggleSection,
+  navigate,
+  courseId,
 }) => {
   return (
     <div className="md:hidden">
@@ -307,7 +325,7 @@ const MobileSectionAccordion = ({
         <div key={section._id}>
           {/* Section Header */}
           <button
-            className="w-full bg-richblack-700 p-3 text-left rounded-md flex justify-between items-center"
+            className="w-full bg-richblack-700 p-3 text-left rounded-md flex justify-between items-center mb-3"
             onClick={() => toggleSection(section._id)}
           >
             {section.sectionName}
@@ -320,7 +338,7 @@ const MobileSectionAccordion = ({
 
           {/* Subsections */}
           {activeSection === section._id && (
-            <div className="bg-richblack-800 mt-1 p-2 rounded-md">
+            <div className="bg-richblack-800 mb-2 p-2 rounded-md">
               {section.subSection.map((topic) => (
                 <p
                   key={topic._id}

@@ -1,15 +1,32 @@
-import axios from 'axios'
+import axios from "axios";
 
+// create axios instance
 export const axiosInstance = axios.create({
-    withCredentials: true, // VERY IMPORTANT send cookie with every request
-})
+  withCredentials: true, // send cookies (for Chrome / Android)
+});
 
+// add request interceptor
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // read token from localStorage (for iOS Safari)
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// generic api connector
 export const apiConnector = (method, url, bodyData, headers, params) => {
-    return axiosInstance({
-        method: `${method}`,
-        url: `${url}`,
-        data: bodyData ? bodyData : null,
-        headers: headers ? headers : null,
-        params: params ? params : null
-    })
-}
+  return axiosInstance({
+    method,
+    url,
+    data: bodyData ?? null,
+    headers: headers ?? {},
+    params: params ?? null,
+  });
+};

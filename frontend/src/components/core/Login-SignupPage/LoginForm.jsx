@@ -33,6 +33,7 @@ function LoginForm({ setLoading }) {
       if (res?.data?.success) {
         dispatch(setUser(res.data.user));
         toast.success(res.data.message || "Logged In");
+        localStorage.setItem("token", response.data.token);
         navigate("/");
       } else {
         toast.error(res?.data?.message || "Login failed");
