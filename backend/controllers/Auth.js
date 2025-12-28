@@ -5,6 +5,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Profile = require("../models/Profile");
+const axios = require("axios");
 
 // send otp
 exports.sendOtp = async (req, res) => {
@@ -207,7 +208,7 @@ exports.login = async (req, res) => {
       success: true,
       message: "Logged In Successfully",
       user: payload,
-      token
+      token,
     });
   } catch (e) {
     console.log("error while login", e);
@@ -316,6 +317,75 @@ exports.logout = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Error while logging out",
+    });
+  }
+};
+
+// google auth
+exports.googleAuth = async (req, res) => {
+  try {
+    const { access_token, accountType } = req.body;
+
+    // get user info from google
+    const googleRes = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    const { email, name, picture } = googleRes.data;
+
+    // split google name
+    const firstName = name?.split(" ")[0] || "User";
+    const lastName = name?.split(" ").slice(1).join(" ") || "";
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // create empty profile first (schema requires it)
+      const profile = await Profile.create({
+        gender: null,
+        dateOfBirth: null,
+        about: null,
+        contactNumber: null,
+      });
+
+      user = await User.create({
+        firstName,
+        lastName,
+        email,
+        image: picture || "",
+        accountType: accountType || "Student", // fallback safety
+        additionalDetails: profile._id,
+        authProvider: "google",
+      });
+    }
+
+    // jwt token
+    const payload = {
+      email: user.email,
+      userId: user._id,
+      role: user.accountType,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
+
+    return res.status(200).json({
+      success: true,
+      token,
+      user: payload,
+      message: "Google Auth Successful",
+    });
+  } catch (error) {
+    console.log("Google auth error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Google auth failed",
     });
   }
 };

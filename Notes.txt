@@ -226,3 +226,19 @@ Now your webhook URL becomes:
 https://a1b2c3d4.ngrok-free.app/api/v1/payments/webhook
 
 // Razorpay needs raw body for signature validation ie /api/v1/payments/webhook
+
+------- signup/signin with google-----
+
+1--> create a project in google dev console under this project create Oauth client id , client secret and savr client-id in .env file
+
+2--> npm install @react-oauth/google on frontend
+
+3--> wrap our app inside <googleauthprovider> which provide google client id via env file to our app
+
+4--> add component(googleAuthButton) to handle api call to /api/v1/auth/google
+
+5--> add route and controller(googleAuth) to handle login/signup with google
+
+------Mobile number verification via otp------
+
+1-->

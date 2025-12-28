@@ -2,6 +2,7 @@ import frameImage from "../../../assets/Images/frame.png";
 import SignupForm from "./SignupForm";
 import LoginForm from "./LoginForm";
 import { FcGoogle } from "react-icons/fc";
+import GoogleAuthButton from "../Auth/GoogleAuthButton";
 
 function Template({ title, desc1, desc2, image, formtype, setLoading}) {
   return (
@@ -25,37 +26,17 @@ function Template({ title, desc1, desc2, image, formtype, setLoading}) {
           <LoginForm setLoading={setLoading} />
         )}
 
-        {/* OR text */}
-        {/* <div className="flex w-full items-center my-4 gap-x-2">
+        {/* -----OR------ text */}
+        <div className="flex w-full items-center my-4 gap-x-2">
           <div className="w-full h-[2px] bg-richblack-700"></div>
           <p className="text-richblack-700 font-medium leading-[1.375rem]">
             OR
           </p>
           <div className="w-full h-[2px] bg-richblack-700"></div>
-        </div> */}
+        </div>
 
         {/* signup signin using google TODO task */}
-        {/* <div>
-          {formtype === "signup" ? (
-            <button
-              className="w-full flex justify-center items-center 
-                    rounded-[8px] font-medium text-custom-text border border-richblack-700 px-[12px] py-[8px]
-                    gap-x-2 mt-6 capitalize"
-            >
-              <FcGoogle />
-              sign up with google
-            </button>
-          ) : (
-            <button
-              className="w-full flex justify-center items-center 
-                    rounded-[8px] font-medium text-custom-text border border-richblack-700 px-[12px] py-[8px]
-                    gap-x-2 mt-6 capitalize"
-            >
-              <FcGoogle />
-              sign in with google
-            </button>
-          )}
-        </div> */}
+        <GoogleAuthButton formtype={formtype} />
       </div>
 
       {/* right part img div */}

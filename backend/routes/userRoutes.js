@@ -4,12 +4,14 @@ const { auth } = require("../middlewares/auth");
 
 // import controllers fn
 const {resetPasswordToken, resetPassword} = require('../controllers/ResetPassword');
-const { sendOtp, signUp, login, changePassword, meController, logout } = require('../controllers/Auth');
+const { sendOtp, signUp, login, changePassword, meController, logout, googleAuth } = require('../controllers/Auth');
 
 router.post('/sendotp', sendOtp);
 router.post('/signup', signUp);
 router.post('/login', login);
 router.post('/logout', logout)
+router.post('/google', googleAuth);
+
 
 // protected routes
 router.post('/reset-password-token', resetPasswordToken);

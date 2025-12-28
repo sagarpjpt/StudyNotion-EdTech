@@ -31,7 +31,8 @@ export const auth = {
     SEND_OTP: BASE_URL + '/api/v1/auth/sendotp',
     SIGNUP: BASE_URL + '/api/v1/auth/signup',
     LOG_OUT: BASE_URL + '/api/v1/auth/logout',
-    CHANGE_PASSWORD: BASE_URL + '/api/v1/auth/changepassword'
+    CHANGE_PASSWORD: BASE_URL + '/api/v1/auth/changepassword',
+    O_AUTH_GOOGLE: BASE_URL + '/api/v1/auth/google'
 }
 
 export const profile = {

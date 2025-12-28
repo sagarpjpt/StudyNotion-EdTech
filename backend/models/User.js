@@ -1,62 +1,75 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     firstName: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true,
     },
     lastName: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true,
     },
     email: {
-        type: String,
-        required: true,
-        trim: true,
+      type: String,
+      required: true,
+      trim: true,
     },
+
+    // password optional for google users
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: function () {
+        return this.authProvider === "local";
+      },
     },
+
     accountType: {
-        type: String,
-        enum: ["Admin", "Student", "Instructor"],
-        required: true
+      type: String,
+      enum: ["Admin", "Student", "Instructor"],
+      required: true,
     },
+
     additionalDetails: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "Profile",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
     },
+
     courses: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course"
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
     ],
+
     image: {
-        type: String,
-        required: true
+      type: String,
+      default: "",
     },
-    token: {
-        type: String,
+
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
     },
-    resetPasswordExpires: {
-        type: Date,
-    },
+
+    token: String,
+    resetPasswordExpires: Date,
+
     courseProgress: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "CourseProgress"
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CourseProgress",
+      },
     ],
-    
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("User", userSchema)
+module.exports = mongoose.model("User", userSchema);
 
-// we dont store courseProgress ids here as not needed now 
+// we dont store courseProgress ids here as not needed now
 // will store when we require:
 //Show all user’s course progress at once like for--> Analytics dashboards
