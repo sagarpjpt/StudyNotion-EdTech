@@ -1,12 +1,12 @@
-// src/components/PublicRoute.jsx
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function PublicRoute({ children }) {
   const { user } = useSelector((state) => state.profile);
+  const token = localStorage.getItem("token");
 
-  if (user) {
-    // if user is already logged in, redirect to home/dashboard
+  // if already authenticated, block access to public pages
+  if (user || token) {
     return <Navigate to="/" replace />;
   }
 

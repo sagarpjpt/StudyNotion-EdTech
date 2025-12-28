@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { VscDashboard } from "react-icons/vsc"
 import { Link } from "react-router-dom";
+import useLogout from "../../../hooks/useLogout";
 
 const ProfileDropDown = () => {
   const [profileIcon, setProfileIcon] = useState();
@@ -32,27 +33,7 @@ const ProfileDropDown = () => {
   }, []);
 
   // Logout function
-  async function logoutUser() {
-    try {
-      const res = await apiConnector("POST", auth.LOG_OUT);
-      if (res?.data?.success) {
-        toast.success("Logged out successfully");
-        // clear redux state
-        dispatch(logout());
-        // remove any local data
-        localStorage.removeItem("verifyEmailPending");
-        localStorage.removeItem("verifyEmailFor");
-        localStorage.removeItem("signupPayload");
-        localStorage.removeItem("token");
-        navigate("/login");
-      } else {
-        toast.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Something went wrong during logout");
-    }
-  }
+  const logoutUser = useLogout();
 
   return (
     <div className="relative inline-block text-left">

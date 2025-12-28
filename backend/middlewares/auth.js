@@ -5,11 +5,15 @@ exports.auth = async (req, res, next) => {
   try {
     // access token from cookies
     const token =
-      req.cookies.token ||
+      req?.cookies?.token ||
       req
         .header("Authorization")
         ?.replace(/Bearer\s+/i, "")
         .trim();
+    // const token = req
+    //   .header("Authorization")
+    //   ?.replace(/Bearer\s+/i, "")
+    //   .trim();
     if (!token) {
       return res.status(401).json({
         success: false,
