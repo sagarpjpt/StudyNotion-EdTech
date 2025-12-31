@@ -14,15 +14,83 @@ const genders = ["Male", "Female", "Prefer not to say", "Other"];
 export default function EditProfile({ user, setUser }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [tempPhone, setTempPhone] = useState("");
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+
+  useEffect(() => {
+    if (user?.additionalDetails?.isPhoneVerified !== undefined) {
+      setIsPhoneVerified(user.additionalDetails.isPhoneVerified);
+    }
+  }, [user]);
 
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors, isSubmitSuccessful },
+    getValues,
+    formState: { errors },
   } = useForm();
 
   const submitProfileForm = async (data) => {
+    console.log("Form Data Submitted:", data); //string
+    console.log(
+      "Current User Contact Number:",
+      user?.additionalDetails?.contactNumber
+    ); //number
+    console.log("Is Phone Verified:", isPhoneVerified);
+    // if phone is not saved ie adding new phone number
+    if (
+      !isPhoneVerified ||
+      (isPhoneVerified &&
+        Number(data.contactNumber) !== user?.additionalDetails?.contactNumber)
+    ) {
+      // set temp phone so that it can be used for otp verification
+      setTempPhone(data.contactNumber);
+      // send otp to new phone number
+      await sendPhoneOtp(data.contactNumber);
+      setShowOtpModal(true);
+      return;
+    }
+
+    // phone unchanged → normal profile update
+    normalProfileUpdate(data);
+  };
+
+  const sendPhoneOtp = async (phone) => {
+    try {
+      await apiConnector("POST", profile.SEND_OTP_PHONE, {
+        phone,
+      });
+      toast.success("OTP sent to mobile");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to send OTP");
+    }
+  };
+
+  const verifyPhoneOtp = async () => {
+    try {
+      const res = await apiConnector("POST", profile.VERIFY_OTP_PHONE, {
+        phone: tempPhone,
+        otp,
+      });
+
+      if (res?.data?.success) {
+        toast.success("Mobile verified");
+        setIsPhoneVerified(true);
+        setShowOtpModal(false);
+        setOtp("");
+
+        // after verification, submit profile again
+        const formData = getValues();
+        await normalProfileUpdate(formData);
+      }
+    } catch (err) {
+      toast.error("Invalid OTP");
+    }
+  };
+
+  const normalProfileUpdate = async (data) => {
     setLoading(true);
     try {
       // Make API call
@@ -208,10 +276,44 @@ export default function EditProfile({ user, setUser }) {
           <IconBtn
             type="submit"
             text="Save"
+            disabled={loading}
             customClasses="bg-yellow-50 hover:scale-95 hover:shadow-none"
           />
         </div>
       </form>
+      {showOtpModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-richblack-800 p-6 rounded-lg w-[350px]">
+            <h2 className="text-lg text-richblack-5 mb-4">
+              Verify Mobile Number
+            </h2>
+
+            <input
+              type="text"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter OTP"
+              className="w-full p-3 rounded bg-richblack-700 text-richblack-5"
+            />
+
+            <div className="flex gap-3 mt-4 justify-end">
+              <button
+                onClick={() => setShowOtpModal(false)}
+                className="px-4 py-2 bg-richblack-600 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={verifyPhoneOtp}
+                className="px-4 py-2 bg-yellow-50 text-black rounded"
+              >
+                Verify
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

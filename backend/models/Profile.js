@@ -14,7 +14,14 @@ const profileSchema = new mongoose.Schema({
     contactNumber: {
         type:Number,
         trim: true
-    }
+    },
+    isPhoneVerified: {
+        type: Boolean,
+        default: false
+    },
+    phoneVerifiedAt: {
+        type: Date
+    },
 })
 
 module.exports = mongoose.model("Profile", profileSchema)

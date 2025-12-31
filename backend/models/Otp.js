@@ -3,12 +3,22 @@ const mailSender = require("../utils/mailSender");
 const otpTemplate =
   require("../mail/templates/emailVerificationTemplate").default;
 const otpSchema = new mongoose.Schema({
+  // used for email otp
   email: {
     type: String,
-    required: true,
+  },
+  // used for phone otp
+  phone: {
+    type: String,
   },
   otp: {
     type: String,
+    required: true,
+  },
+  // tells what kind of otp this is very imp so we dont mix up email & phone logic
+  type: {
+    type: String,
+    enum: ["email", "phone"],
     required: true,
   },
   createdAt: {
@@ -41,7 +51,10 @@ async function sendVerificationEmail(email, otp) {
   }
 }
 
+// send email only when otp type is email
 otpSchema.pre("save", async function (next) {
+  if (this.type !== "email") return next();
+  // send email
   await sendVerificationEmail(this.email, this.otp);
   next(); // go to next middleware
 });

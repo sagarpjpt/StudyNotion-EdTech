@@ -40,7 +40,9 @@ export const profile = {
     UPDATE_DP: BASE_URL + '/api/v1/profiles/update-display-picture',
     UPDATE_PROFILE: BASE_URL + '/api/v1/profiles/update-profile',
     DEL_PROF: BASE_URL + '/api/v1/profiles/delete-account',
-    GET_INSTRUCTOR_DASHBOARD_DATA: BASE_URL + '/api/v1/profiles/instructor-dashboard-data'
+    GET_INSTRUCTOR_DASHBOARD_DATA: BASE_URL + '/api/v1/profiles/instructor-dashboard-data',
+    SEND_OTP_PHONE: BASE_URL + '/api/v1/profiles/send-phone-otp',
+    VERIFY_OTP_PHONE: BASE_URL + '/api/v1/profiles/verify-phone-otp',
 }
 
 export const contactusEndpoint = {

@@ -227,18 +227,245 @@ https://a1b2c3d4.ngrok-free.app/api/v1/payments/webhook
 
 // Razorpay needs raw body for signature validation ie /api/v1/payments/webhook
 
-------- signup/signin with google-----
+------- SIGNUP / SIGNIN WITH GOOGLE (FRONTEND + BACKEND) -------
 
-1--> create a project in google dev console under this project create Oauth client id , client secret and savr client-id in .env file
 
-2--> npm install @react-oauth/google on frontend
+1) CREATE GOOGLE OAUTH CREDENTIALS
+---------------------------------
 
-3--> wrap our app inside <googleauthprovider> which provide google client id via env file to our app
+- Go to Google Developer Console
+- Create a new project
+- Inside that project:
+  - Configure OAuth Consent Screen
+    - App name
+    - Support email
+    - Scopes: basic profile & email (default)
+- Create OAuth Client ID
+  - Application type: Web
+  - Add Authorized JavaScript Origins:
+    - http://localhost:3000
+    - production frontend URL
+  - Add Authorized Redirect URIs:
+    - same frontend URLs
+- After creation, Google provides:
+  - Client ID
+  - Client Secret
 
-4--> add component(googleAuthButton) to handle api call to /api/v1/auth/google
+Store Client ID in frontend .env file:
 
-5--> add route and controller(googleAuth) to handle login/signup with google
+VITE_GOOGLE_CLIENT_ID=xxxxxxxxxxxx.apps.googleusercontent.com
+
+Note:
+- Client Secret should never be exposed to frontend
+- Env changes always require redeploy
+
+
+2) INSTALL GOOGLE OAUTH PACKAGE (FRONTEND)
+------------------------------------------
+
+Inside frontend folder run:
+
+npm install @react-oauth/google
+
+This package:
+- Opens Google login popup
+- Handles OAuth flow
+- Returns Google access_token after success
+
+
+3) WRAP APP WITH GOOGLEOAUTHPROVIDER
+------------------------------------
+
+In main.jsx / index.jsx:
+
+- Wrap the App component with GoogleOAuthProvider
+- Pass Google Client ID from env
+
+Purpose:
+- Makes Google OAuth available globally
+- Injects Google client config into the app
+
+
+4) CREATE GOOGLE AUTH BUTTON COMPONENT
+--------------------------------------
+
+Component responsibilities:
+
+- Trigger Google popup using useGoogleLogin
+- Handle success and error callbacks
+- Receive Google access_token
+- Send access_token to backend API
+- Handle both signup and signin
+- Store JWT returned by backend
+- Update user state in Redux
+
+API called from frontend:
+
+POST /api/v1/auth/google
+
+
+5) ROLE SELECTION POPUP (FOR GOOGLE SIGNUP)
+-------------------------------------------
+
+Google does NOT provide account type (Student / Instructor).
+
+Recommended flow:
+- If formtype === signup:
+  - Show popup before Google login
+  - Ask user to select role:
+    - Student
+    - Instructor
+- Save selected role in state
+- After selection, open Google popup
+- Send selected role to backend along with access_token
+
+For signin:
+- Skip role popup
+- Directly open Google login
+
+
+6) BACKEND ROUTE FOR GOOGLE AUTH
+-------------------------------
+
+Create a single route:
+
+POST /api/v1/auth/google
+
+This route handles:
+- Google signup
+- Google signin
+
+
+7) GOOGLE AUTH CONTROLLER (BACKEND LOGIC)
+----------------------------------------
+
+Controller steps:
+
+1. Receive from frontend:
+   - access_token
+   - accountType (optional)
+2. Call Google userinfo API using access_token
+3. Extract user data:
+   - email
+   - full name
+   - profile image
+4. Check database for existing user by email
+5. If user does NOT exist:
+   - Split name into firstName and lastName
+   - Create Profile document (if required by schema)
+   - Create new User with:
+     - firstName
+     - lastName
+     - email
+     - image
+     - accountType (default to Student if not provided)
+     - authProvider = "google"
+6. If user exists:
+   - Skip user creation
+7. Generate JWT token
+8. Send response:
+   - success
+   - token
+   - user object
+
+Important:
+- Password is NOT required for Google users
+- Schema validation handles this using authProvider field
+
+
+8) JWT & SESSION HANDLING
+------------------------
+
+- Backend generates JWT after Google auth
+- Frontend:
+  - Stores token in localStorage
+  - Saves user data in Redux store
+- Protected routes use JWT for authentication
+
+
+9) IMPORTANT NOTES / COMMON MISTAKES
+------------------------------------
+
+- Google OAuth only verifies identity, not authorization
+- Backend must always create / validate user
+- Never trust frontend blindly for role
+- Always redeploy after env variable changes
+- Frontend env vars must start with VITE_
+- Backend and frontend axios are separate installs
+- Do not mix require/exports with import/export
+
+
+10) COMPLETE FLOW SUMMARY
+-------------------------
+
+Click Google Button
+↓
+(If signup) Select account type
+↓
+Google popup opens
+↓
+Google returns access_token
+↓
+Frontend sends token to backend
+↓
+Backend fetches Google profile
+↓
+User created if new
+↓
+JWT generated
+↓
+User logged into app
+
+
+------- END -------
+
 
 ------Mobile number verification via otp------
 
-1-->
+Mobile Number OTP Verification – Implementation Notes
+
+1. Identified where phone verification fits
+Phone number is part of user profile, not signup/login.
+So OTP verification was added during profile update, not auth flow.
+Goal was to verify phone only when user adds or changes it.
+
+2. Created backend OTP APIs
+Added separate APIs under profile routes for phone OTP.
+One API sends OTP, another verifies OTP.
+OTP is generated on backend and stored in Otp collection with type "phone".
+
+3. Handling OTP verification on backend
+While verifying OTP, latest OTP for that phone is checked.
+If OTP matches, phone number is saved in user profile.
+OTP entry is deleted after successful verification.
+
+4. OTP delivery during development
+Initially OTP was printed in backend console for testing.
+SMS integration was explored but blocked due to DLT / provider setup.
+Final decision was to send OTP to user email for now.
+
+5. Integrated email OTP sending
+Reused existing email sender utility.
+Same phone OTP is sent to user email when phone verification is triggered.
+No frontend changes were needed for delivery switch.
+
+6. Frontend profile form changes
+Save button is kept enabled, OTP flow is handled inside submit.
+On submit, phone number is compared with previously saved value.
+If phone is new or changed, OTP API is called and modal is opened.
+
+7. OTP modal handling
+OTP modal opens only when phone verification is required.
+User enters OTP and clicks verify.
+On success, modal closes and profile update continues.
+
+8. Handling form and state issues
+Used react-hook-form watch instead of manual onChange.
+Fixed issue where tempPhone was not being stored correctly.
+Handled async user data so isPhoneVerified does not stay undefined.
+
+9. Final flow check
+Adding phone first time triggers OTP.
+Changing phone triggers OTP again.
+Updating bio or name does not trigger OTP.
+Profile update happens only after successful OTP verification.

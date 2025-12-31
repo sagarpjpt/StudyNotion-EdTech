@@ -42,7 +42,7 @@ exports.sendOtp = async (req, res) => {
       result = await Otp.findOne({ otp });
     }
 
-    const otpPayload = { email, otp };
+    const otpPayload = { email, otp, type: "email" };
 
     // create an entry for OTP
     const otpBody = await Otp.create(otpPayload);
